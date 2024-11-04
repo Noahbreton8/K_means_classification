@@ -6,7 +6,7 @@
 #       We will use a different script to test your codes. 
 from matplotlib import pyplot as plt
 
-import YourName.A3codes as A3codes
+import A3codes as A3codes
 from A3helpers import augmentX, plotModel, generateData, plotPoints
 
 
@@ -22,7 +22,7 @@ def _plotCls():
 	W = A3codes.minMulDev(Xtrain, Ytrain)
 	print(f"Train accuaracy {A3codes.calculateAcc(Ytrain, A3codes.classify(Xtrain, W))}")
 
-	plotModel(Xtrain, Ytrain, W, A3codes.classify)
+	#plotModel(Xtrain, Ytrain, W, A3codes.classify)
 
 	return
 
@@ -45,4 +45,4 @@ def _plotKmeans():
 if __name__ == "__main__":
 
 	_plotCls()
-	_plotKmeans()
+	# _plotKmeans()
