@@ -18,11 +18,13 @@ def _plotCls():
 	Xtrain, Ytrain = generateData(n=n, gen_model=1, rand_seed=0)
 	Xtrain = augmentX(Xtrain)
 
-	# Learn and plot results
-	W = A3codes.minMulDev(Xtrain, Ytrain)
-	print(f"Train accuaracy {A3codes.calculateAcc(Ytrain, A3codes.classify(Xtrain, W))}")
+	print(A3codes.PCA(Xtrain, 1))
+	
+	# # Learn and plot results
+	# W = A3codes.minMulDev(Xtrain, Ytrain)
+	# print(f"Train accuaracy {A3codes.calculateAcc(Ytrain, A3codes.classify(Xtrain, W))}")
 
-	plotModel(Xtrain, Ytrain, W, A3codes.classify)
+	# plotModel(Xtrain, Ytrain, W, A3codes.classify)
 
 	return
 

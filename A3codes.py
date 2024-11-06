@@ -1,13 +1,16 @@
 import numpy as np
 import cvxopt.solvers as solvers
 import scipy.optimize as optimize
+import scipy.linalg as linalg
 import scipy
+import os
 import scipy.special._logsumexp as log
 import pandas as pd
 import A3helpers
 
 solvers.options['show_progress'] = False
-
+#1
+#a
 def mul_diviance(W, X, Y, d, k):
     W_reshape = np.reshape(W, (d, k))
     term1 = X @ W_reshape
@@ -45,4 +48,25 @@ def calculateAcc(Yhat, Y):
 def synRegExperiment():
     return A3helpers.synClsExperiments(minMulDev, classify, calculateAcc)
     
-# print(synRegExperiment())
+#print(synRegExperiment())
+
+#2
+#a
+def PCA(X, k):
+    n, d = X.shape
+    U = np.mean(X, axis=0)
+    U = X - U
+    res = linalg.eigh(U.T @ U)
+    return res[1][:, -k:].T
+
+#b
+def fashion_MNIST():
+    dataset = pd.read_csv("A3train.csv").to_numpy()
+    U = PCA(dataset, 20)
+    A3helpers.plotImgs(U)
+    
+fashion_MNIST()
+#c 
+def projPCA(Xtest, mu, U):
+    Xproj = Xtest - mu.T
+    return Xproj
