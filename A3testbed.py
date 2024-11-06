@@ -22,7 +22,7 @@ def _plotCls():
 	W = A3codes.minMulDev(Xtrain, Ytrain)
 	print(f"Train accuaracy {A3codes.calculateAcc(Ytrain, A3codes.classify(Xtrain, W))}")
 
-	#plotModel(Xtrain, Ytrain, W, A3codes.classify)
+	plotModel(Xtrain, Ytrain, W, A3codes.classify)
 
 	return
 

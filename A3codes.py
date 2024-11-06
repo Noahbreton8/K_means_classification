@@ -9,13 +9,13 @@ import A3helpers
 solvers.options['show_progress'] = False
 
 def mul_diviance(W, X, Y, d, k):
-    W_reshape = W.reshape(d, k)
-    term1 = X @ W_reshape # k x n
+    W_reshape = np.reshape(W, (d, k))
+    term1 = X @ W_reshape
     term2 = log.logsumexp(term1, axis=1) 
-    term3 = Y.T @ term1 
+    term3 = term1 @ Y.T 
     term4 = np.diag(term3)
-
-    return np.sum(term2) - np.sum(term4)
+    
+    return np.mean(term2-term4)
 
 
 def minMulDev(X, Y):
@@ -23,33 +23,26 @@ def minMulDev(X, Y):
     k = Y.shape[1]
     W = np.zeros(d * k)
     res = optimize.minimize(mul_diviance, W, args=(X, Y, d, k))
-    # print(res)
-    # print((d, k))
-    return res.x.reshape((d, k))
+    return np.reshape(res.x, (d, k))
 
 #b
-def indmax(X, k):
-    y = np.argmax(X, axis=1)
-    Y = np.empty((0, k))
-    for row in y:
-        Y = np.vstack([Y, A3helpers.convertToOneHot(row, k)])
-
-    return Y
-
 def classify(Xtest, W):
-    #print(Xtest.shape, W.shape)
-    term1 = Xtest @ W
-    Yhat = indmax(term1, W.shape[1])
+    scores = Xtest @ W
+    max_indices = np.argmax(scores, axis=1)
+
+    Yhat = np.zeros_like(scores)
+    for index, max_index in enumerate(max_indices):
+        Yhat[index][max_index] = 1
     return Yhat
 
+#c
 def calculateAcc(Yhat, Y):
     predicted = np.argmax(Yhat, axis=1)
-    ground = np.argmax(Y, axis= 1)
-    # print(Yhat)
-    # print(Y)
+    ground = np.argmax(Y, axis=1)
     return np.mean(predicted == ground)
 
+'''probably remove when submitting'''
 def synRegExperiment():
     return A3helpers.synClsExperiments(minMulDev, classify, calculateAcc)
     
-print(synRegExperiment())
+# print(synRegExperiment())
