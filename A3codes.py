@@ -2,12 +2,9 @@ import numpy as np
 import cvxopt.solvers as solvers
 import scipy.optimize as optimize
 import scipy.linalg as linalg
-import scipy
-import os
 import scipy.special._logsumexp as log
 import pandas as pd
 import A3helpers
-import random
 import scipy.spatial.distance as d
 
 solvers.options['show_progress'] = False

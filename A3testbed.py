@@ -46,5 +46,5 @@ def _plotKmeans():
 
 if __name__ == "__main__":
 
-	_plotCls()
-	# _plotKmeans()
+	#_plotCls()
+	_plotKmeans()
