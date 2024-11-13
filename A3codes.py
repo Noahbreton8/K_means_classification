@@ -5,9 +5,10 @@ import scipy.linalg as linalg
 import scipy.special._logsumexp as log
 import pandas as pd
 import A3helpers
-import scipy.spatial.distance as d
+import scipy.spatial.distance as dist
 
 solvers.options['show_progress'] = False
+
 #1
 #a
 def mul_diviance(W, X, Y, d, k):
@@ -43,12 +44,6 @@ def calculateAcc(Yhat, Y):
     ground = np.argmax(Y, axis=1)
     return np.mean(predicted == ground)
 
-'''probably remove when submitting'''
-def synRegExperiment():
-    return A3helpers.synClsExperiments(minMulDev, classify, calculateAcc)
-    
-#print(synRegExperiment())
-
 #2
 #a
 def PCA(X, k):
@@ -56,15 +51,14 @@ def PCA(X, k):
     mu = np.mean(X, axis=0)
     U = X - mu
     res = linalg.eigh(U.T @ U)
-    return res[1][:, -k:].T
+    v = res[1].T
+    return v[::-1][:k]
 
 #b
 def fashion_MNIST():
     dataset = pd.read_csv("A3train.csv").to_numpy()
     U = PCA(dataset, 20)
     A3helpers.plotImgs(U)
-    
-# fashion_MNIST()
 
 #c 
 def projPCA(Xtest, mu, U):
@@ -104,13 +98,8 @@ def synClsExperimentsPCA():
     # TODO: compute the average accuracies over runs
     # TODO: return 2-by-2 train accuracy and 2-by-2 test accuracy
 
-# print(synClsExperimentsPCA())
-#e
-
-
 #3
 #a
-
 def kmeans(X, k, max_iter=1000):
     n, d = X.shape
     assert max_iter > 0
@@ -118,25 +107,15 @@ def kmeans(X, k, max_iter=1000):
     indices= np.random.choice(n, k, replace=False)  
     U = X[indices]                                       # TODO: Choose k random points from X as initial centers
     for i in range(max_iter):
-        D = pairwise_distance(X, U)             # TODO: Compute pairwise distance between X and U
+        D = dist.cdist(X, U)            # TODO: Compute pairwise distance between X and U
         Y = cluster_assignments(D)              # TODO: Find the new cluster assignments
         old_U = U
         U = np.linalg.inv((Y.T @ Y + 1e-8 * np.eye(k)))@ Y.T @ X   # TODO: Update cluster centers
         if np.allclose(old_U, U):
             break
     W = X - Y@U
-    obj_val = 1/(2*n) * np.trace(W.T @ W) **2                 # TODO: Compute objective value
+    obj_val = 1/(2*n) * np.linalg.norm(W, 'fro') ** 2   # TODO: Compute objective value
     return Y, U, obj_val
-
-def pairwise_distance(X, U):
-    # D = []
-    # for row in X:
-    #     D_row = []
-    #     for row2 in U:
-    #         D_row.append(np.sum(row - row2))
-    #     D.append(D_row)
-    # return D
-    return d.cdist(X, U)
 
 #b
 def cluster_assignments(D):
@@ -172,9 +151,3 @@ def chooseK(X, k_candidates=[2,3,4,5,6,7,8,9]):
         obj_val_list.append(obj_val)
 
     return obj_val_list
-
-Xtrain, Ytrain = A3helpers.generateData(n=100, gen_model=2)
-obj_val_list = chooseK(Xtrain)
-print(obj_val_list)
-
-#[1219.365953773579, 402.0883975029475, 155.90767163304153, 104.82182371648109, 69.31305342824578, 51.60135632031073, 39.764469345950374, 31.42019298010047]

@@ -17,14 +17,12 @@ def _plotCls():
 	# Generate data
 	Xtrain, Ytrain = generateData(n=n, gen_model=1, rand_seed=0)
 	Xtrain = augmentX(Xtrain)
-
-	print(A3codes.PCA(Xtrain, 1))
 	
 	# # Learn and plot results
-	# W = A3codes.minMulDev(Xtrain, Ytrain)
-	# print(f"Train accuaracy {A3codes.calculateAcc(Ytrain, A3codes.classify(Xtrain, W))}")
+	W = A3codes.minMulDev(Xtrain, Ytrain)
+	print(f"Train accuaracy {A3codes.calculateAcc(Ytrain, A3codes.classify(Xtrain, W))}")
 
-	# plotModel(Xtrain, Ytrain, W, A3codes.classify)
+	plotModel(Xtrain, Ytrain, W, A3codes.classify)
 
 	return
 
@@ -34,7 +32,7 @@ def _plotKmeans():
 	n = 100
 	k = 3
 
-	Xtrain, _ = generateData(n, gen_model=2)
+	Xtrain, _ = generateData(n, gen_model=1)
 
 	Y, U, obj_val = A3codes.kmeans(Xtrain, k)
 	plotPoints(Xtrain, Y)
@@ -46,5 +44,5 @@ def _plotKmeans():
 
 if __name__ == "__main__":
 
-	#_plotCls()
+	_plotCls()
 	_plotKmeans()
